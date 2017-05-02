@@ -1,0 +1,63 @@
+package tests_Chrome_ANSYS;
+
+
+import static utilities.SeleniumDriver.*;
+import static utilities.SW_Constants.*;
+import static utilities.SystemUtil_SW.*;
+
+import org.junit.*;
+
+public class SW_Purchase_Ticket
+{
+	@BeforeClass
+	//Open Browser
+	public static void setUpBeforeRun() throws Exception {
+		initializeDriverChrome(SW_URL);
+	}
+	
+	@Test
+	public void Purchase_Ticket() throws Exception {
+		//Test_Case_Steps: G:\V181_TB\Products\SWTravel\SWTravel_Tests\src\utilities\Test_Case_Steps
+		//PAGE1
+		setTextField(DEPART, DEPART_CITY);
+		setTextField(ARRIVE, ARRIVAL_CITY);
+		setTextField(DEPART_DATE, D_DATE);
+		setTextField(RETURN_DATE, R_DATE);
+		isRadioButtonSelected(DOLLARS_RADIO_BUTTON);
+		isRadioButtonSelected(ROUND_TRIP_RADIO_BUTTON);
+		verifyExists(ADULTS_COUNT, "1");
+		findAndClick(SEARCH_BUTTON);
+		
+		//PAGE2
+		verifyExists(FROM, "IAD");
+		verifyExists(TO, "LAX");
+		findAndClick(TRAVEL_TIME);
+		findAndClick(SELECT_FLIGHT_OUTBOUND);
+		findAndClick(SELECT_FLIGHT_INBOUND);
+		findAndClick(CONTINUE_BUTTON);
+		
+		//PAGE3
+		findAndClick(CONTINUE_BTN);
+		
+		//PAGE4
+		setTextField(FIRST_NAME, FNAME);
+		setTextField(LAST_NAME, LNAME);
+		clickDropDown(DOB, DOB_DATE);
+		clickDropDown(DAY, BIRTH_DAY);
+		clickDropDown(YEAR, BIRTH_YEAR);	
+		clickDropDown(GENDER, "Female");	
+		setTextField(EMAIL, EMAIL_ID);
+		verifyTextContains(DEPART_VERIFY, DEPART_CITY);
+		verifyTextContains(ARRIVE_VERIFY, ARRIVAL_CITY );
+		clickDropDown(CREDIT_CARD, CREDIT_CARD_TYPE);	
+		findAndClick(SUBMIT_BTN);
+		verifyTextContains(MSG_AREA, getXmlMsg(1));
+		verifyTextContains(MSG_AREA1, getXmlMsg(3));
+	}
+
+	@AfterClass
+	public static void tearDownAfterRun() throws Exception {
+		closeDriver();
+	}
+}
+

@@ -1,0 +1,70 @@
+package TestRunner;
+
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+
+		@RunWith(Suite.class)
+		@SuiteClasses({				
+			/*tests_FF_ANSYS.Add_Invalid_License_File.class,
+			tests_FF_ANSYS.Add_License_File_ANSYS_And_Ansoft.class,
+			tests_FF_ANSYS.Add_License_File.class,
+			tests_FF_ANSYS.Reread_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Restart_Add_Invalid_License_File.class,
+			tests_FF_ANSYS.Restrict_Access_to_Dashboard_Remote_Machine.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_1.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_2.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_3.class,
+			tests_FF_ANSYS.Start_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Start_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_FF_ANSYS.Start_StoppedLM_With_InvalidLicenseFile.class,
+			tests_FF_ANSYS.Start_StoppedLM_With_MissingExecutables.class,
+			tests_FF_ANSYS.Stop_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Stop_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_FF_ANSYS.Stop_StartedLM_With_MissingExecutables.class,
+			tests_FF_ANSYS.Verify_Exists.class,
+			tests_FF_ANSYS.View_Lic_Config_Details.class,
+			tests_FF_ANSYS.View_Log_License_Files.class,
+			tests_FF_ANSYS.Hostid_Info.class,*/
+			
+			//tests_Chrome_ANSYS.Add_Invalid_License_File.class,
+			
+			
+		/*	tests_IE_ANSYS.Reread_LicenseManager_Successfully.class,
+			tests_IE_ANSYS.Restrict_Access_to_Dashboard_Remote_Machine.class,
+			tests_IE_ANSYS.Start_LicenseManager_Successfully.class,
+			tests_IE_ANSYS.Start_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_IE_ANSYS.Start_StoppedLM_With_InvalidLicenseFile.class,
+			tests_IE_ANSYS.Start_StoppedLM_With_MissingExecutables.class,
+			tests_IE_ANSYS.Stop_LicenseManager_Successfully.class,
+			tests_IE_ANSYS.Stop_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_IE_ANSYS.Stop_StartedLM_With_MissingExecutables.class,
+			tests_IE_ANSYS.Verify_Exists.class,
+			tests_FF_ANSYS.View_Lic_Config_Details.class,
+			tests_FF_ANSYS.View_Log_License_Files.class,
+			tests_IE_ANSYS.Add_Invalid_License_File.class,
+			tests_IE_ANSYS.Add_License_File_ANSYS_And_Ansoft.class,
+			tests_IE_ANSYS.Add_License_File.class,
+			tests_IE_ANSYS.Restart_Add_Invalid_License_File.class,
+			tests_IE_ANSYS.Specify_LM_Run_Mode_1.class,
+			tests_IE_ANSYS.Specify_LM_Run_Mode_2.class,
+			tests_IE_ANSYS.Specify_LM_Run_Mode_3.class,*/
+			
+			
+			// The following test set have been commented out of the nightly runs until Selenium can fix an issue with their IE driver so these tests will pass. The issue number and link are below. 
+			//Issue 8101 - https://code.google.com/p/selenium/issues/detail?id=8101&colspec=ID%20Stars%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&start=700
+			
+			// The following tests are commented out because they are failing due to another Selenium IEDriver issue. The issue number and link are below. 
+			//Issue 8307 - https://code.google.com/p/selenium/issues/detail?id=8307
+			
+			
+			// The following tests are commented out because we cannot save to file without a system prompt in IE. 
+			// If we interact with the system prompt in IE these tests will fail in our nightly test set because they are run using TeamCity as a Windows Service.  
+			//
+			//tests_Chrome_ANSYS.Hostid_Info.class,
+		})
+
+		public class TestRunner_ANSYS {
+			}

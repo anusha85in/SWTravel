@@ -1,0 +1,43 @@
+package tests_Chrome;
+
+
+import static utilities.SeleniumDriver.*;
+import static utilities.SW_Constants.*;
+import static utilities.SystemUtil_SW.*;
+
+import org.junit.*;
+
+public class Southwest_Ticket
+{
+	@BeforeClass
+	//Open Browser
+	public static void setUpBeforeRun() throws Exception {
+		initializeDriverChrome(SW_URL);
+	}
+	
+	@Before
+	public void setupBeforeEachTest() throws Exception {	
+		refreshPage();
+	}
+
+	@Test
+	/*
+	Verify "Round trip" radio button is selected.
+	Verify Labels exist "DEPART", "ARRIVE", DEPART DATE, 
+	 */
+	public void Page_2() throws Exception {
+		setTextField(DEPART, DEPART_CITY);
+		setTextField(ARRIVE, ARRIVAL_CITY_BLANK);
+		setTextField(DEPART_DATE, D_DATE);
+		setTextField(RETURN_DATE, R_DATE);
+		findAndClick(SEARCH_BUTTON);
+		verifyTextContains(MSG_AREA1, getXmlMsg(14));
+	}
+	
+	
+	@AfterClass
+	public static void tearDownAfterRun() throws Exception {
+		closeDriver();
+	}
+}
+

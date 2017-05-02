@@ -1,0 +1,892 @@
+package utilities;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static utilities.LMCenter_Constants.*;
+
+public class SystemUtil_ANSYS 
+{
+	public static String[] xmlMsg = loadAllXMLMessages();
+	
+	//License File names
+	public static final String LF_VALID_LICENSE = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "ValidLicenseFile.lic";
+	public static final String LF_HOSTID_NO_MATCH = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "HostIDNotMatching.lic";
+	public static final String LF_HOSTID_MISSING = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "HostIDMissing.lic";
+	public static final String LF_INVALID_NO_OF_SERVER_LINES = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "InvalidNumberOfServerLines.lic";
+	public static final String LF_VENDOR_LINE_MISSING = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "VendorLineMissing.lic";
+	public static final String LF_BLANK = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "BlankLicenseFile.lic";
+	public static final String LF_NO_INCREMENT_LINES = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "NoIncrementLines.lic";
+	public static final String LF_ALL_FEATURES_EXPIRED = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "AllFeaturesExpired.lic";
+	public static final String LF_BAD_IP_ADDRESS = getTBFolder() +  "dataANSYS" + getHostNameWithPathSeparators() + "BadIPAddressAndGoodHostId.lic";
+	public static final String LF_HOSTNAME_MISSING = getTBFolder() +  "dataANSYS" + getHostNameWithPathSeparators() + "HostNameMissing.lic";
+	public static final String LF_BAD_FIRST_SERVER_LINE = getTBFolder() +  "dataANSYS" + getHostNameWithPathSeparators() + "BadFirstServerLine.lic";
+	public static final String LF_NO_SERVER_LINE = getTBFolder() +  "dataANSYS" + getHostNameWithPathSeparators() + "NoServerLine.lic";
+	public static final String LF_BAD_SECOND_SERVER_LINE = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "BadSecondServerLine.lic";
+	public static final String LF_DIFFERENT_PORTS_ON_SERVER_LINES = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "DifferentPortsOnServerLines.lic";
+	public static final String LF_DOCX_FORMAT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "FormatDocx.docx";
+	public static final String LF_UNREADABLE_FORMAT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "Unreadable.docx";
+	public static final String LF_SAME_VENDOR_SERVER_PORT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "SamePortVendorServerLines.lic";
+	public static final String LF_ONLY_ONE_SERVER_LINE_HAS_PORT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "OnePortThreeServerLines.lic";
+	public static final String LF_ATLEAST_ONE_UNEXPIRED_FEATURE = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "OneLicenseFeatureNotExpired.lic";
+	public static final String LF_VALID_TRIAD_MACHINE_ON_LINE2 = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "TriadMachineListed2nd.lic";
+	public static final String LF_VALID_TRIAD_MACHINE_ON_LINE3 = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "TriadMachineListed3rd.lic";
+	public static final String LF_COMMENTED_INCREMENT_LINES = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "BlankLines#IncLines.lic";
+	public static final String LF_THIS_HOST_SERVERNAME = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "This_HostServerName.lic";
+	public static final String LF_INVALID_HOSTNAME_VALID_HOSTID = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "InvalidHostName.lic";
+	public static final String LF_INVALID_LICENSE_ENCRYPTION_KEY = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "InvalidLicenseEncryptionKey.lic";
+	public static final String LF_VALID_TRIAD_LICENSE = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "ValidTriadLicenseFile.lic";
+	public static final String LF_VALID_TRIAD_LF_MIXED_CASE = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "DifferentCaseInTriadLicenseFile.lic";
+	public static final String Log_FlexNet = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "license.log";
+	public static final String Log_ALI = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "ansysli_server.log";
+	//public static final String LF_INVOKE_LMGRD_ERROR = "D:/workspace/DashboardTests/dataANSYS"+ getHostNameWithPathSeparators() + "lmgrdErrorMsg.lic";
+	
+	//Add License File user story
+	public static final String Add_LF_TXT_LIC = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "lic.txt";
+	public static final String Add_LF_Port_On_Server = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onServerLine.lic";
+	public static final String Add_LF_Port_On_Server_Diff_Features = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onServerLineDiffFeatures.lic";
+	public static final String Add_LF_Port_On_Vendor = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onVendorLine.lic";
+	public static final String Add_LF_Port_On_Vendor_Diff_Features = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onVendorLineDiffFeatures.lic";
+	public static final String Add_LF_Port_On_Vendor1 = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onVendorLine1.lic";
+	public static final String Add_LF_Port_On_Vendor1_Diff_Features = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onVendorLine1DiffFeatures.lic";
+	public static final String Add_LF_Blank_Lines_In_Increment_Lines = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "BlankLinesInINCREMENTLines.lic";
+	public static final String No_LF_Same_Port_Server_Vendor_Lines = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "SamePortVendorServerLines.lic";
+	public static final String No_LF_Different_Port_Server_Lines = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "NoLFDifferentPortServerLines.lic";
+	public static final String No_LF_Invalid_Port = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "NoLFInvalidPort.lic";
+	public static final String No_LF_Port_On_Server_Line = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "PortNo.onServerLine.lic";
+	public static final String Different_Port_Server_Vendor_Lines = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "DifferentPortVendorServerLines.lic";
+	public static final String Add_LF_VALID_LICENSE1 = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "ValidLicenseFile1.lic";
+	public static final String Add_LF_VALID_LICENSE_NOPORT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "ValidLicenseFileNoPort.lic";
+	public static final String Add_ONE_FEAT_NOT_COMMENTED_OUT = getTBFolder() + "dataANSYS" + getHostNameWithPathSeparators() + "OneLicenseFeatureNotCommentedOut.lic";
+	
+	//Add License File user story Ansoft License Files.
+	public static final String ANSOFT_ADD_LF_VALID_LICENSE = getTBFolder() + "dataANSOFT" + getHostNameWithPathSeparators() + "ValidLicenseFile.lic";
+	public static final String ANSOFT_PORT_1055_SEVERLINE = getTBFolder() + "dataANSOFT" + getHostNameWithPathSeparators() + "PortNo.1055.onServerLine.lic";
+	public static final String ANSOFT_PORT_9999_SEVERLINE_1056_VENDORLINE = getTBFolder() + "dataANSOFT" + getHostNameWithPathSeparators() + "PortNo.9999.onServerLine.1056.onVendorLine.lic";
+	public static final String ANSOFT_HANDLE_LINE_CONTINUATION_VENDOR_DEAMON_PATH = getTBFolder() + "dataANSOFT" + getHostNameWithPathSeparators() + "HandleLineContinuation.VendorDeamonPath.lic";
+	
+	//License files from local temporary directory
+	public static final String LF_VALID_LICENSE_FROM_TEMP = getLicensingTempPath(VENDOR) + "ValidLicenseFile.lic";
+	public static final String LF_VALID_LICENSE_FROM_TEMP_TXT = getLicensingTempPath(VENDOR) + "ValidLicenseFile.txt";
+	
+	//Hostname File
+	public static final String FILE_HOST_ID_INFO_DIR_WIN  = "C:/Users/" + System.getProperty("user.name") + "/Downloads/";
+	public static final String FILE_HOST_ID_INFO_DIR_LIN  = System.getProperty("user.home") + "/Downloads/";
+	
+	public static final String FILE_HOST_ID_INFO_PATH_WIN  = "C:/Users/" + System.getProperty("user.name") + "/Downloads/" + "ansysid." + getHostName().toUpperCase() +".txt";
+	public static final String FILE_HOST_ID_INFO_PATH_LIN  = System.getProperty("user.home") + "/Downloads/ansysid." + getHostName().toUpperCase() +".txt";
+	
+	public static final String SUITE_REPORTS_DIR_WIN = setSuiteDir();
+	public static final String SUITE_REPORTS_DIR_LIN = setSuiteDir();
+	
+	
+	private static String getTBFolder() {
+		if(isWindowsOS())
+			//return "\\\\cantbsrv\\TestBench_v180\\testsetlib\\Products\\LMCenter\\LMCenterTests\\";
+			return "G:/V182_TB/Products/LMCenter/LMCenterTests/";
+	
+		else
+			return "/mnt/mount_tb/v180/testsetlib/Products/LMCenter/LMCenterTests/";
+	}
+	
+	private static String getXmlFilePath() {
+		if(isWindowsOS())
+			return "C:\\Program Files\\ANSYS Inc\\Shared Files\\Licensing\\tools\\lmcenter\\language\\en-us\\lmcenter_msgs.xml";
+		else
+			return "/licregs/shared_files/licensing/tools/lmcenter/language/en-us/lmcenter_msgs.xml";
+	}
+	
+	public static String getLicenseFolder(String vendor) {
+		if(isWindowsOS())
+			return LICENSE_FILES_FOLDER_WIN;
+		else
+			return LICENSE_FILES_FOLDER_LIN;
+	}
+	
+	public static String getLicensingPath(String vendor) {
+		if(isWindowsOS())
+			return LICENSING_FOLDER_WIN;
+		else
+			return LICENSING_FOLDER_LIN;
+	}
+	
+	public static String getExecFolder(String vendor) {
+		if(isWindowsOS())
+			return LICENSING_FOLDER_WIN + "\\" + getOSType() + "\\";
+		else
+			return LICENSING_FOLDER_LIN + "/" + getOSType() + "/";
+	}
+	
+	public static String getIniPath(String vendor) {
+		if(isWindowsOS())
+			return LICENSING_FOLDER_WIN + "ansyslmd.ini";
+		else
+			return LICENSING_FOLDER_LIN + "ansyslmd.ini";
+	}
+	
+	public static String getLicensingTempPath(String vendor) {
+		if(isWindowsOS())
+			return LICENSING_TEMP_FOLDER_WIN;
+		else
+			return LICENSING_TEMP_FOLDER_LIN;
+	}
+	
+	public static String getHostIDDirPath() {
+		if(isWindowsOS())
+			return FILE_HOST_ID_INFO_DIR_WIN;
+		else
+			return FILE_HOST_ID_INFO_DIR_LIN;
+	}
+	
+	public static String getHostIDFilePath() {
+		if(isWindowsOS())
+			return FILE_HOST_ID_INFO_PATH_WIN;
+		else
+			return FILE_HOST_ID_INFO_PATH_LIN;
+	}
+	
+	public static String getXmlMsg(int msgId) {
+		return xmlMsg[msgId];
+	}
+	
+	public static boolean isLicenseManagerRunning(String processName) {
+		if(isWindowsOS())
+			return  isProcessRunningOnWindows(processName) && isProcessRunningOnWindows("ansysli_server") && isProcessRunningOnWindows("ansysli_monitor");
+		else
+			return isProcessRunningOnNIX(processName) && isProcessRunningOnNIX("ansysli_server") && isProcessRunningOnNIX("ansysli_monitor");
+	}
+	
+	public static boolean isLicenseManagerStopped(String processName) {
+		if(isWindowsOS())
+			return  isProcessRunningOnWindows(processName) || isProcessRunningOnWindows("ansysli_server") || isProcessRunningOnWindows("ansysli_monitor");
+		else
+			return isProcessRunningOnNIX(processName) || isProcessRunningOnNIX("ansysli_server") || isProcessRunningOnNIX("ansysli_monitor");
+	}
+	
+	public static boolean isAnyLMProcessIsRunning() {
+		if(isWindowsOS())
+			return  isProcessRunningOnWindows("ansysli_server") || isProcessRunningOnWindows("ansysli_monitor") || isProcessRunningOnWindows("ansyslmd") || isProcessRunningOnWindows("lmgrd");
+		else
+			return isProcessRunningOnNIX("ansysli_server") || isProcessRunningOnNIX("ansysli_monitor") || isProcessRunningOnNIX("ansyslmd") || isProcessRunningOnNIX("lmgrd");
+	}
+	
+	public static boolean isLicenseManagerRunningLoop(String processName) {
+		int counter = 0;
+		while (! isLicenseManagerRunning(processName) && counter < 100)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+		}
+		sleepOnLinux(3000);
+		return isLicenseManagerRunning(processName);
+	}
+	
+	public static boolean isLicenseManagerStoppedLoop(String processName) {
+		int counter = 0;
+		while (isLicenseManagerStopped(processName) && counter < 100)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+		}
+		return !isLicenseManagerStopped(processName);
+	}
+	
+	public static boolean isLicenseManagerRunning2(String processName) {
+		if(isWindowsOS())
+			return isProcessRunningOnWindows("ansysli_server") && isProcessRunningOnWindows("ansysli_monitor") && !isProcessRunningOnWindows(processName);
+		else
+			return isProcessRunningOnNIX("ansysli_server") && isProcessRunningOnNIX("ansysli_monitor") && !isProcessRunningOnNIX(processName);
+	}
+	
+	public static boolean isLicenseManagerRunning2Loop(String processName) {
+		int counter = 0;
+		while (! isLicenseManagerRunning2(processName) && counter < 100)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+		}
+		return isLicenseManagerRunning2(processName);
+	}
+	
+	public static boolean startLicenseManager() {
+        if (isLicenseManagerRunning(VENDOR)) return true;
+        try {
+            if(isWindowsOS())
+            {
+                String[] cmd2 = {"sc",
+                        "start",
+                        "ANSYS, Inc. License Manager"};
+                Process proc = Runtime.getRuntime().exec(cmd2);
+                String[] textToFind = {"INFO            Ready to accept connections."};
+                return (processLOGFor(LICENSING_FOLDER_WIN + "ansysli_server.log", textToFind));
+            }
+            else
+            {
+                String ansysli_server =  "/ansysli_server";
+                String pathToLIServer = LICENSING_FOLDER_LIN + getOSType() + ansysli_server;
+                String[] cmd = {pathToLIServer}; 
+                Process proc = Runtime.getRuntime().exec(cmd); 
+                sleepOnLinux(1000);
+                String[] textToFind = {"INFO            Ready to accept connections."};
+                return (processLOGFor(LICENSING_FOLDER_LIN + "ansysli_server.log", textToFind));
+            }
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+	
+    public static void buildFile(String logLocation, String[] textToWrite) throws IOException {
+	       BufferedWriter input = new BufferedWriter(new FileWriter(logLocation));
+			try {
+		        for(int i = 0; i < textToWrite.length; i++)
+		        	input.write(textToWrite[i] + "\n");
+		      
+		        input.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+	}
+    
+    private static boolean processLOGFor(String logLocation, String[] textToFind) throws FileNotFoundException {
+	       BufferedReader input = new BufferedReader(new FileReader(logLocation));
+			try {
+		        String line = input.readLine();
+		        String fullFile = "";
+		        while (line != null && line != "") {
+		        	fullFile += line;
+		            line = input.readLine();
+		        } 
+		        //Get Last section of startup
+		    	fullFile = fullFile.split("-------------------------------------------- NORMAL STARTUP ")[fullFile.split("-------------------------------------------- NORMAL STARTUP ").length - 1];
+		    	SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/DD hh:mm:ss");
+		    	Date current = df.parse(fullFile.substring(0, 19));
+		    	
+		    	for(int i = 0; i < textToFind.length; i++)
+	        	{
+	        		if(fullFile.contains(textToFind[i]) && current.after(new Date(new Date().getTime() - 10)))
+	        		{
+	        			input.close();
+	        			return true;
+	        		}
+	        	}
+		        input.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		return false;
+	}
+
+	public static boolean stopLicenseManager() {
+        if (!isLicenseManagerStopped(VENDOR)) return true;
+        try {
+            if(isWindowsOS())
+            {
+                String[] cmd2 = {"sc",
+                        "stop",
+                        "ANSYS, Inc. License Manager"};
+                Process proc = Runtime.getRuntime().exec(cmd2);
+                return (processLogContainsName(proc, VENDOR)) ? true : false;
+            }
+            else
+            {
+            	//String ansysli_server =  "\\ansysli_server";
+                String pathToLIServer = LICENSING_FOLDER_LIN + getOSType() + "/ansysli_server";
+                String[] cmd = {pathToLIServer, "-k", "stop"}; 
+                Process proc = Runtime.getRuntime().exec(cmd); 
+                return (processLogContainsName(proc, "shut down")) ? true : false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+	public static String getHostName() {
+    	
+    	if (System.getProperty("os.name").contains("Windows"))
+		{
+			try
+			{
+				return InetAddress.getLocalHost().getHostName().toLowerCase();
+			}
+			catch (Exception e)
+			{
+				System.out.println("ERROR: Could not determine hostname");
+				return null;
+			}
+		}
+		else
+		{
+			try 
+			{
+				String[] cmd = {"hostname", "-s"};
+				Process proc = Runtime.getRuntime().exec(cmd);
+				
+				BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+				String line = input.readLine();
+				
+				if(line != null)
+						return line;
+				else
+				{
+					System.out.println("ERROR: Could not determine hostname");
+					return null;
+				}
+			} 
+			catch (IOException e) {
+				System.out.println("ERROR: Could not determine hostname");
+				return null;
+			}
+		}
+    }
+	
+	public static String[] getMacAddress()
+	{
+		String slmutil = getExecFolder(VENDOR) + "lmutil";
+		if (System.getProperty("os.name").contains("Windows"))
+		{
+			slmutil = getExecFolder(VENDOR) + "lmutil.exe";
+		}
+		try 
+		{
+			String[] cmd = {slmutil, "lmhostid", "-n", "-ether"};
+			Process proc = Runtime.getRuntime().exec(cmd);
+
+			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = input.readLine();
+			
+
+			if(line != null) {
+				line = line.replaceAll("\"", "");
+				String[] line2 = line.split(" ");
+				return line2;
+			} 
+			else {
+				System.out.println("ERROR: Could not determine MAC Address");
+				return null;
+			}
+		} 
+		catch (IOException e) {
+			System.out.println("ERROR: Could not determine MAC Address");
+			return null;
+		}
+	}
+	
+	public static String getDiskSerialNumber()
+	{
+		String slmutil = getExecFolder(VENDOR) + "lmutil";
+		if (System.getProperty("os.name").contains("Windows"))
+		{
+			slmutil = getExecFolder(VENDOR) + "lmutil.exe";
+		}
+		try 
+		{
+			String[] cmd = {slmutil, "lmhostid", "-n", "-vsn"};
+			Process proc = Runtime.getRuntime().exec(cmd);
+			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = input.readLine();
+			if(line != null)
+				return line.substring(16);
+			else
+			{
+				System.out.println("ERROR: Could not determine Disk Serial Number");
+				return null;
+			}
+		} 
+		catch (IOException e) {
+			System.out.println("ERROR: Could not determine Disk Serial Number");
+			return null;
+		}
+	}
+
+	public static String getHostNameWithPathSeparators() {
+    	
+    	if (System.getProperty("os.name").contains("Windows"))
+		{
+			try
+			{
+				return "/" + InetAddress.getLocalHost().getHostName().toLowerCase() + "/";
+			}
+			catch (Exception e)
+			{
+				System.out.println("ERROR: Could not determine hostname");
+				return null;
+			}
+		}
+		else
+		{
+			try 
+			{
+				String[] cmd = {"hostname", "-s"};
+				Process proc = Runtime.getRuntime().exec(cmd);
+				
+				BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+				String line = input.readLine();
+				
+				if(line != null)
+						return "/" + line + "/";
+				else
+				{
+					System.out.println("ERROR: Could not determine hostname");
+					return null;
+				}
+			} 
+			catch (IOException e) {
+				System.out.println("ERROR: Could not determine hostname");
+				return null;
+			}
+		}
+    }
+
+    public static void assertFalse(boolean assertFalse)
+	{
+		org.junit.Assert.assertFalse(assertFalse);
+	}
+    
+	public static void assertTrue(boolean assertTrue)
+	{
+		org.junit.Assert.assertTrue(assertTrue);
+	}
+
+	public static boolean deleteLicenseFile(String vendor) {
+		String licenseFilePath = getLicenseFolder(vendor) + "ansyslmd.lic";
+		return new File(licenseFilePath).delete();
+	}
+	
+	public static void deleteFile(String fileNameWithPath) {
+		try{
+			File FileToDelete = new File(fileNameWithPath);
+	        if (FileToDelete.exists()){
+	        	FileToDelete.delete();
+	        }   
+	        
+	      	}catch(Exception e){
+	      		e.printStackTrace();
+	      	}
+
+	}
+
+	public static boolean installLicenseFile(String sourceLicenseFilePath, String vendor) {
+		File sourceFile = new File(sourceLicenseFilePath);
+		File targetFile = new File(getLicenseFolder(vendor)  + "ansyslmd.lic");
+		try {
+			InputStream in = new FileInputStream(sourceFile);
+			OutputStream out = new FileOutputStream(targetFile, false);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			Thread.sleep(250);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static boolean copyLicenseFile(String sourceLicenseFilePath, String vendor) {
+		File sourceFile = new File(sourceLicenseFilePath);
+		File targetFile = new File(getLicenseFolder(vendor) + sourceFile.getName());
+		try {
+			InputStream in = new FileInputStream(sourceFile);
+			OutputStream out = new FileOutputStream(targetFile, false);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static void renameLicenseFile(String newName, String license_file_name, String vendor) {
+		File licenseFile = new File(getLicenseFolder(vendor) + license_file_name + ".lic");
+		licenseFile.renameTo(new File(getLicenseFolder(vendor) + newName));
+	}
+	
+	public static boolean licenseFileExists(String fileName, String vendor) {
+		File licenseFile = new File(getLicenseFolder(vendor) + fileName);
+		return licenseFile.exists();
+	}
+	
+	public static void clearLicenseFolder(String vendor) {
+		File folder = new File(getLicenseFolder(vendor));
+		File[] listOfFiles = folder.listFiles(); 		 
+		for (int i = 0; i < listOfFiles.length; i++) { 
+			if (!listOfFiles[i].isDirectory()) listOfFiles[i].delete();
+		}
+	}
+	
+	public static void clearLicenseFile(String vendor) {
+		File targetFile = new File(getLicenseFolder(vendor)  + "ansyslmd.lic"); 
+		targetFile.delete();
+	}
+	
+	public static void clearFlexNetDebugLogFile(String vendor) {
+		File targetFile = new File(getLicenseFolder(vendor)  + "license.log"); 
+		targetFile.delete();
+	}
+	
+	public static void clearALILogFile(String vendor) {
+		File targetFile = new File(getLicenseFolder(vendor)  + "ansysli_server.log"); 
+		targetFile.delete();
+	}
+	
+	public static void renameEXE(String from, String to, String vendor) {
+		if (System.getProperty("os.name").contains("Windows"))
+		{
+			File fromFile = new File(getExecFolder(vendor) + from + ".exe");
+			if (fromFile.exists()) fromFile.renameTo(new File(getExecFolder(vendor) + to + ".exe"));
+		}
+		else
+		{
+			File fromFile = new File(getExecFolder(vendor) + from);
+			if (fromFile.exists()) fromFile.renameTo(new File(getExecFolder(vendor) + to));
+		}
+	}
+	
+	
+	public static void createTempDir(String path, String name) {
+		new File(path + name).mkdirs();
+	}
+	
+	public static boolean copyLicFileToTempDir(String sourceLicenseFilePath, String targetTempFolder) {
+		File sourceFile = new File(sourceLicenseFilePath);
+		File targetFile = new File(targetTempFolder);
+		try {
+			InputStream in = new FileInputStream(sourceFile);
+			OutputStream out = new FileOutputStream(targetFile, false);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			Thread.sleep(250);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	public static void deleteLicensingTempDir(String vendor) {
+		File folder = new File(getLicensingTempPath(VENDOR));
+		if (folder.exists()){
+			File[] listOfFiles = folder.listFiles(); 		 
+			for (int i = 0; i < listOfFiles.length; i++) { 
+				if (!listOfFiles[i].isDirectory()) listOfFiles[i].delete();
+			}
+			folder.delete();
+		}
+	}
+	
+	public static String getErrorWhileStarting() {
+		if (System.getProperty("os.name").contains("Windows"))
+		{
+			return "ansysli_server.exe, ansysli_monitor.exe, ansyslmd.exe";
+		}
+		else
+		{
+			return "ansysli_server, ansysli_monitor, ansyslmd";
+		}
+	}
+	
+	public static void sleepOnLinux(Integer milsecs) {
+		if (System.getProperty("os.name").contains("Windows"))
+		{
+			return ;
+		}
+		else
+		{
+			try {
+				Thread.sleep(milsecs);
+			} catch (Exception e) {
+			}
+		}
+	}
+	
+	public static void afterNSecondsKillLMGRD (Integer secs, String processName)  {
+		int counter = 0;
+		while (isLicenseManagerStopped(processName) && counter < secs)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+		}
+		
+		if (isLicenseManagerStopped(processName)) {
+			 killLMGRD();
+		}
+		if (isLicenseManagerStopped(processName)) {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			 killLMGRD();
+		}
+	}
+	
+	public static void killLMGRD()	{
+		if(isAnyLMProcessIsRunning())
+		{
+		  if (System.getProperty("os.name").contains("Windows"))
+		    {
+		        String[] cmd = {"taskkill", "/F", "/IM", "lmgrd.exe"};
+		        String[] cmd2 = {"taskkill", "/F", "/IM", "lmutil.exe"};
+		        String[] cmd3 = {"taskkill", "/F", "/IM", "ansyslmd.exe"};
+		        String[] cmd4 = {"taskkill", "/F", "/IM", "ansysli_server.exe"};
+		        String[] cmd5 = {"taskkill", "/F", "/IM", "ansysli_monitor.exe"};
+		        try {
+		            Runtime.getRuntime().exec(cmd);
+		            Runtime.getRuntime().exec(cmd2);
+		            Runtime.getRuntime().exec(cmd3);
+		            Runtime.getRuntime().exec(cmd4);
+		            Runtime.getRuntime().exec(cmd5);
+		        } catch (IOException e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
+		    else
+		    {
+		        String[] cmd = {"killall", "-9", "lmgrd"};
+		        String[] cmd2 = {"killall", "-9", "ansyslmd"};
+		        String[] cmd3 = {"killall", "-9", "lmutil"};
+		        String[] cmd4 = {"killall", "-9", "ansysli_server"};
+		        String[] cmd5 = {"killall", "-9", "ansysli_monitor"};
+		        try {
+		            Runtime.getRuntime().exec(cmd);
+		            Runtime.getRuntime().exec(cmd2);
+		            Runtime.getRuntime().exec(cmd3);
+		            Runtime.getRuntime().exec(cmd4);
+		            Runtime.getRuntime().exec(cmd5);
+		            Thread.sleep(500);
+		        } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		        }
+		    }
+		    try {
+		        //LocalServer serverQuery = new LocalServer("ansoftd","en-us");
+		        int i = 0;
+		     //   while(serverQuery.isRunning() && i < 5 )
+		        while(isLicenseManagerRunning(VENDOR) && i < 20 )
+		        {        
+		            Thread.sleep(100);
+		            i++;
+		        }
+		    } catch (InterruptedException e) {
+		        e.printStackTrace();
+		    }
+		}
+	}
+	
+	public static String getReportsBaseDir() {
+		if(isWindowsOS())
+			return REPORTS_BASE_DIR_WIN;
+		else
+		{
+			String userHome = System.getProperty("user.home");
+			return userHome + REPORTS_BASE_DIR_LIN;
+		}
+	}
+	
+	public static String setSuiteDir() {
+		String date = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss").format(new Date());
+		String suiteDir = getReportsBaseDir() + date;
+		return suiteDir;
+	}
+	
+	public static String getSuiteDir() {
+		if(isWindowsOS())
+			return SUITE_REPORTS_DIR_WIN;
+		else
+			return SUITE_REPORTS_DIR_WIN;
+	}
+	
+	public static String setTestFolderDir(String setName, String testName) {
+		String suiteDir = getSuiteDir();
+		String setDir = null;
+		if (setName.contains("FF"))
+			setDir = suiteDir + File.separatorChar + setName.substring(15) + "_Firefox";
+		if (setName.contains("Chrome"))
+			setDir = suiteDir + File.separatorChar + setName.substring(19) + "_Chrome";
+		if (setName.contains("IE"))
+			setDir = suiteDir + File.separatorChar + setName.substring(15) + "_IE";
+		String testFolder = setDir + File.separatorChar + testName + File.separatorChar;
+		return testFolder;
+	}
+	
+	public static String getOSType() {
+		if (isWindowsOS()) return (System.getProperty("os.arch").contains("64")) ? "WINX64" : "WIN32";
+		else if (isLinuxOS()) return (System.getProperty("os.arch").contains("64")) ? "linx64" : "lin32";
+        return null;
+	}
+	
+
+	//=================================================================================================================
+	// PRIVATE METHODS
+	//=================================================================================================================
+	private static String[] loadAllXMLMessages() {
+		try {
+			File fXmlFile = new File(getXmlFilePath());
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+			NodeList nodeList = doc.getElementsByTagName("MESSAGE");
+			ArrayList<String> xmlMessages = new ArrayList<String>();
+			int id;
+			for (int index = 0; index < nodeList.getLength();  index++) {
+				Node node = nodeList.item(index);
+				Element element = (Element) node;
+				id = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent().trim());
+				
+				if(id > xmlMessages.size())
+					xmlMessages = increaseCapacity(id + 1, xmlMessages);
+				
+				xmlMessages.add(id,element.getElementsByTagName("MSG").item(0).getTextContent().trim());
+				//Special case processing for XML Message ID 85 because it contains white spaces that are not shown in the LMCenter GUI. 
+				if(id == 85)
+					xmlMessages.add(id,element.getElementsByTagName("MSG").item(0).getTextContent().trim().replaceAll("  ", ""));
+			}		
+			return xmlMessages.toArray(new String[xmlMessages.size()]);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static ArrayList<String> increaseCapacity(int newSize, ArrayList<String> xmlMessages) {
+		
+		for(int i = 0; i < newSize; i++)
+			if(i >= xmlMessages.size() || xmlMessages.get(i) == null)
+				xmlMessages.add(i,"");
+		return xmlMessages;
+	}
+
+	private static boolean isWindowsOS() {
+		return (System.getProperty("os.name").contains("Windows")) ? true : false;
+	}
+	
+	private static boolean isLinuxOS() {
+		return (System.getProperty("os.name").contains("Linux")) ? true : false;		
+	}
+	
+	static boolean isProcessRunningOnWindows(String processName) {
+		try {
+	        Process proc = Runtime.getRuntime().exec("tasklist /FI \"IMAGENAME eq " + processName + ".exe\" /FO CSV /NH");
+	        BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	        String line = input.readLine();
+	        while(line != null && line != "") {
+	            if(line.contains(processName)) {
+	              input.close();
+	              return true;
+	            }
+	            if(line.contains("INFO: No tasks")) {
+	              input.close();
+	              return false;
+	            }
+	            line = input.readLine();
+	        } 
+	        input.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        return false;
+	}
+	
+	static boolean isProcessRunningOnNIX(String processName) {
+        try {
+            String[] cmd = {"/bin/sh","-c","ps -w -w -ef | grep \""+processName+"\""};           
+            Process proc = Runtime.getRuntime().exec(cmd);
+            BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String line = input.readLine();
+            while(line != null) {
+                if(line.contains("grep")) line = input.readLine();
+                else if (line.contains(processName)) {
+                	input.close();
+                	return true;
+                }
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+	
+	private static boolean processLogContainsName(Process proc, String processName) {
+        BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		try {
+	        String line = input.readLine();
+	        while(line != null && line != "") {
+	            if(line.contains(processName)) {
+	              input.close();
+	              return true;
+	            }
+	            line = input.readLine();
+	        } 
+	        input.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+        return false;
+	}
+	
+	private static void printProcessLog(Process proc) {
+	       BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			try {
+		        String line = input.readLine();
+		        while (line != null && line != "") {
+		            System.out.println(line);
+		            line = input.readLine();
+		        } 
+		        input.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+	}
+}
+	
+		

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MESSAGES>
+    <LANGUAGE>
+        <ID>
+            en-us
+        </ID>
+        <LABEL>
+            English
+        </LABEL>
+    </LANGUAGE>
+    <MESSAGE>
+        <ID>
+            1
+        </ID>
+        <MSG>
+            The purchaser's first name was not entered.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            2
+        </ID>
+        <MSG>
+           The purchaser's last name was not entered. 
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            3
+        </ID>
+        <MSG>
+            The credit card number was not entered.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            4
+        </ID>
+        <MSG>
+            The credit card expiration month was not selected. 
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            5
+        </ID>
+        <MSG>
+           The credit card expiration year was not selected.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            6
+        </ID>
+        <MSG>
+           The credit card security code was not entered. 
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            9
+        </ID>
+        <MSG>
+            The purchaser's address was not entered.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            10
+        </ID>
+        <MSG>
+           The purchaser's city was not entered.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            11
+        </ID>
+        <MSG>
+            The purchaser's state was not entered. 
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            12
+        </ID>
+        <MSG>
+            The purchaser's zip code was not entered. 
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            13
+        </ID>
+        <MSG>
+            The purchaser's contact phone number was not entered completely.
+        </MSG>
+    </MESSAGE>
+    <MESSAGE>
+        <ID>
+            14
+        </ID>
+        <MSG>
+            Enter a destination airport.
+        </MSG>
+    </MESSAGE>
+</MESSAGES>

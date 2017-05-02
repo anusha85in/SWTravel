@@ -1,0 +1,90 @@
+package tests_Chrome_ANSYS;
+
+
+import static utilities.SeleniumDriver.*;
+import static utilities.SW_Constants.*;
+import static utilities.SystemUtil_SW.*;
+
+import org.junit.*;
+
+public class SW_Purchase_Ticket
+{
+	@BeforeClass
+	//Open Browser
+	public static void setUpBeforeRun() throws Exception {
+		initializeDriverChrome(baseUrl);
+	}
+	
+	/*PAGE 1
+	Open Browser
+	Verify 'Round Trip' radio button is selected by default
+	Enter 'DEPART' and 'ARRIVE' locations.
+	Verify locations entered match.
+	Enter 'DEPART DATE' and 'RETURN DATE'
+	Verify 'Dollars' Radio button is selected by default.
+	Click 'Search button 
+	*/
+	
+	/*PAGE 2
+	Sort by travel time. Verify price exists under 'Wanna Get Away'
+	Click CONTINUE
+	*/
+	
+	/*PAGE 3
+	Verify details
+	Click continue
+	*/
+	
+	/*PAGE 4
+	Enter 'First Name' and 'Last Name'
+	Select 'Date of Birth' and Gender
+	Enter Email
+	Payment Details
+	Verify 'Purchase' button exists.
+	*/
+	
+	@Test
+	public void Purchase_Ticket() throws Exception {
+		//PAGE1
+		setTextField(DEPART, DEPART_CITY);
+		setTextField(ARRIVE, ARRIVAL_CITY);
+		setTextField(DEPART_DATE, "D_DATE");
+		setTextField(RETURN_DATE, "R_DATE");
+		isRadioButtonSelected(DOLLARS_RADIO_BUTTON);
+		isRadioButtonSelected(ROUND_TRIP_RADIO_BUTTON);
+		verifyExists(ADULTS_COUNT, "1");
+		findAndClick(SEARCH_BUTTON);
+		
+		//PAGE2
+		verifyExists(FROM, "IAD");
+		verifyExists(TO, "LAX");
+		findAndClick(TRAVEL_TIME);
+		findAndClick(SELECT_FLIGHT_OUTBOUND);
+		findAndClick(SELECT_FLIGHT_INBOUND);
+		findAndClick(CONTINUE_BUTTON);
+		
+		//PAGE3
+		findAndClick("CONTINUE_BTN");
+		
+		//PAGE4
+		setTextField("FIRST_NAME", "FNAME");
+		setTextField("LAST_NAME", "LNAME");
+		clickDropDown(DOB, DOB_DATE);
+		clickDropDown(DAY, BIRTH_DAY);
+		clickDropDown(YEAR, BIRTH_YEAR);	
+		clickDropDown(GENDER, "Female");	
+		setTextField(EMAIL, EMAIL_ID);
+		verifyTextContains(DEPART_VERIFY, DEPART_CITY);
+		verifyTextContains(ARRIVE_VERIFY, ARRIVAL_CITY );
+		clickDropDown(CREDIT_CARD, CREDIT_CARD_TYPE);	
+		findAndClick(SUBMIT_BTN);
+		verifyTextContains(MSG_AREA, getXmlMsg(1));
+		verifyTextContains(MSG_AREA1, getXmlMsg(3));
+	}
+
+	@AfterClass
+	public static void tearDownAfterRun() throws Exception {
+		closeDriver();
+	}
+}
+

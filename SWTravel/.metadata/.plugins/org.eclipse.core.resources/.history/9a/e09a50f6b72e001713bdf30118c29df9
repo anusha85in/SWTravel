@@ -1,0 +1,222 @@
+package utilities;
+
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.WebDriver;
+
+public class SeleniumDriver {
+	private static String browserTypeChrome = "Chrome";
+	private static String chromeDriverPath = "G:/V181_TB/Products/SWTravel/SWTravel_Tests/drivers/chromedriver.exe";
+	private static String IEDriverPath = "G:/V181_TB/Products/SWTravel/SWTravel_Tests/drivers/IEDriver.exe";	
+	private static WebDriver browser;
+	private static String baseUrl;
+	//private static String browserSetting;
+	public static String ContentId1 = "content-1";
+	public static String ContentId2 = "content-2";
+	
+	protected SeleniumDriver() {
+	}
+	
+	public static void initializeDriverChrome(String url) {
+		baseUrl = url;
+		//browserSetting = "chrome";
+		browser = getBrowser(browserTypeChrome);
+		browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		browser.get(baseUrl);
+	}
+	
+	public static void closeDriver() {
+		browser.quit();
+	}
+	
+	public static void refreshPage() {
+		browser.get(browser.getCurrentUrl());
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void verifyTextEquals(String elementLabel, String text) {	
+		assertEquals(text, getWebElement(elementLabel).getText());
+	}
+	
+	public static void verifyIconEquals(String elementLabel, String image) {	
+	browser.switchTo().defaultContent();
+	String elementProperties = getWebElement(elementLabel).getAttribute("style");
+	int counter = 0;
+	while (! elementProperties.contains(image) && counter < 120)
+	{
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		counter++;
+		elementProperties = getWebElement(elementLabel).getAttribute("style");
+	}
+	if(! elementProperties.contains(image) )
+	{
+		fail("Image expected\" " + image + " \" not in \" " + elementProperties + " \"");
+	}
+	browser.switchTo().defaultContent();
+	}
+
+	public static void verifyTextContains(String elementLabel, String text) {
+		String elementText = getWebElement(elementLabel).getText();
+		int counter = 0;
+		while (! elementText.contains(text) && counter < 180)
+		{
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+			elementText = getWebElement(elementLabel).getText();
+		}
+		if(! elementText.contains(text) )
+		{
+			fail("Expected text: \"" + text + "\" not contained in \"" + elementText + "\"");
+		}
+	}
+	
+	public static void verifyTitleEquals(String elementLabel, String text) {
+		System.out.println(getWebElement(elementLabel).getAttribute("alt"));
+		//browser.findElement(By.)
+		//assertEquals(text, title);
+	}
+	
+	public static void findAndClick(String elementLabel) {
+		browser.switchTo().defaultContent();
+		WebElement element = getWebElement(elementLabel);
+		int counter = 0;
+		while(element == null && counter < 120)
+		{
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+			element = getWebElement(elementLabel);
+		}
+		if(element == null)
+		{
+			throw new Error("Cannot find: " + elementLabel);
+		}
+		try {
+			element.click();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Error("Clicking on " + elementLabel + " failed");
+		}
+		browser.switchTo().defaultContent();
+	}
+	
+	public static boolean isRadioButtonSelected(String elementLabel) {
+		browser.switchTo().frame(browser.findElement(By.id("content-2"))); 
+		WebElement element = getWebElement(elementLabel);
+		int counter = 0;
+		while(element == null && counter < 120)
+		{
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			counter++;
+			element = getWebElement(elementLabel);
+		}
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		boolean isButtonSelected = element.isSelected();
+		browser.switchTo().defaultContent();
+		return isButtonSelected;
+	}
+	
+	public static void setTextField(String elementLabel, String text) {
+		WebElement element = getWebElement(elementLabel);
+		getWebElement(elementLabel).clear();
+		element.sendKeys(text);
+	}
+	
+	public static void clickDropDown(String elementLabel, String text) {
+		WebElement element = getWebElement(elementLabel);
+		Select dropdown= new Select(element);
+		dropdown.selectByVisibleText(text);
+	}
+	
+	
+	
+	
+	public static boolean isTextFieldDisplayed(String elementLabel) {
+		browser.switchTo().frame(browser.findElement(By.id("content-2"))); 
+		boolean isFieldDisplayed = getWebElement(elementLabel).isDisplayed();
+		browser.switchTo().defaultContent();
+		return isFieldDisplayed;
+	}
+	
+	public static void verifyExists(String elementLabel) {
+		browser.switchTo().defaultContent();
+		if (getWebElement(elementLabel) == null)
+		{
+			fail(elementLabel + " not found");
+		}
+	}
+	
+	public static void verifyExists(String elementLabel, String contentId) {
+		browser.switchTo().frame(browser.findElement(By.id(contentId))); 
+		if (getWebElement(elementLabel) == null)
+		{
+			fail(elementLabel + " not found");
+		}
+		browser.switchTo().defaultContent();
+	}
+	
+	public static WebDriver getBrowser(String browserType) {
+		browserType = browserType.toLowerCase();
+		WebDriver driver = null;
+			if (browserType.equals("ie")) {
+				System.setProperty("webdriver.ie.driver", IEDriverPath);
+				driver = new InternetExplorerDriver();
+			} else if (browserType.equals("chrome")) {
+				System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+				driver = new ChromeDriver();
+			}
+		return driver;
+	}
+
+
+	//=================================================================================================================
+	// PRIVATE METHODS
+	//=================================================================================================================
+	private static WebElement getWebElement(String elementLabel) {
+		WebElement element = (elementLabel.contains("/")) ? 
+				browser.findElement(By.xpath(elementLabel)) : browser.findElement(By.id(elementLabel));
+		return element;
+	}
+	
+/*	private static WebElement getWebElement(String elementLabel) {
+		WebElement element = (elementLabel.contains("/")) ? 
+				(new WebDriverWait(browser, 120)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(elementLabel))) :
+					(new WebDriverWait(browser, 120)).until(ExpectedConditions.presenceOfElementLocated(By.id(elementLabel))) ;
+		JavascriptExecutor je = (JavascriptExecutor) browser;
+		je.executeScript("arguments[0].scrollIntoView(true);",element);
+		return element;
+	}*/
+	
+}

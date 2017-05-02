@@ -1,0 +1,105 @@
+package tests_Chrome_ANSYS;
+
+
+import static utilities.SeleniumDriver.*;
+import static utilities.SW_Constants.*;
+import static utilities.SystemUtil_SW.*;
+
+import org.junit.*;
+
+public class SW_Purchase_Ticket
+{
+	@BeforeClass
+	//Open Browser
+	public static void setUpBeforeRun() throws Exception {
+		initializeDriverChrome("https://www.southwest.com/");
+	}
+	
+	@Before
+	public void setupBeforeEachTest() throws Exception {	
+		
+	}
+	//PAGE 1
+	//Open Browser
+	//Verify 'Round Trip' radio button is selected by default
+	//Enter 'DEPART' and 'ARRIVE' locations.
+	//Verify locations entered match.
+	//Enter 'DEPART DATE' and 'RETURN DATE'
+	//Verify 'Dollars' Radio button is selected by default.
+	//Click 'Search button
+	
+	//PAGE 2
+	//Sort by travel time. Verify price exists under 'Wanna Get Away'
+	//Click CONTINUE
+	
+	//PAGE 3
+	//Verify details
+	//Click continue
+	
+	//PAGE 4
+	//Enter 'First Name' and 'Last Name'
+	//Select 'Date of Birth' and Gender
+	//Enter Email
+	//Payment Details
+	//Verify 'Purchase' button exists.
+	
+	@Test
+	public void Purchase_Ticket() throws Exception {
+		setTextField(DEPART_CITY, "IAD");
+		setTextField(ARRIVE_CITY, "LAX");
+		setTextField(DEPART_DATE, "10/16");
+		setTextField(RETURN_DATE, "10/23");
+		isRadioButtonSelected(".//*[@id='price-type-dollars']");
+		isRadioButtonSelected(".//*[@id='trip-type-round-trip']");
+		findAndClick(".//*[@id='jb-booking-form-submit-button']");
+		//VerifyExists(".//*[@id='booking-form--flight-panel']/div[2]/div[1]/div[1]/div[2]");
+		Thread.sleep(2000);
+		findAndClick(".//*[@id='out_travel_time_header']/button");
+		Thread.sleep(2000);
+		findAndClick(".//*[@id='Out1C']");
+		findAndClick(".//*[@id='In1C']");
+		Thread.sleep(4000);
+		findAndClick(".//*[@id='priceItinerarySubmit']");
+		findAndClick(".//*[@id='priceSubmitButton']");
+		setTextField(".//*[@id='firstName0']", "A");
+		setTextField(".//*[@id='lastName0']", "T");
+		clickDropDown(".//*[@id='dobMonth0']", "6 - June");
+		clickDropDown(".//*[@id='dobDay0']", "3");
+		clickDropDown(".//*[@id='dobYear0']", "1987");	
+		clickDropDown("	.//*[@id='gender0']", "Female");	
+		setTextField(".//*[@id='js-email']", "at@gmail.com");
+		verifyTextContains(".//*[@id='outbound']/div[2]/span[1]", "IAD");
+		verifyTextContains(".//*[@id='outbound']/div[2]/span[3]", "LAX");
+		clickDropDown(".//*[@id='creditCardType']", "Visa");	
+		findAndClick(".//*[@id='visibleSubmitButton']");
+		verifyTextContains(".//*[@id='errors']/li[2]", getXmlMsg(1));
+		verifyTextContains(".//*[@id='errors']/li[4]", getXmlMsg(3));
+	}
+
+	@Test
+	/*
+	Verify "Round trip" radio button is selected.
+	Verify Labels exist "DEPART", "ARRIVE", DEPART DATE, 
+	
+	
+	 * */
+	 
+	public void Page_2() throws Exception {
+		
+		//Click 'Travel Time'
+		Thread.sleep(1000);
+		//Low price
+		findAndClick(".//*[@id='faresOutbound']/thead/tr/th[8]/button");
+		
+		verifyExists(".//*[@id='booking-form--flight-panel']/div[2]/div[1]/div[1]/label");
+		verifyExists(".//*[@id='booking-form--flight-panel']/div[2]/div[1]/div[2]/label");
+		verifyExists(".//*[@id='booking-form--flight-panel']/div[2]/div[2]/div[2]/label");
+	}
+	
+	
+	@AfterClass
+	public static void tearDownAfterRun() throws Exception {
+	//	closeDriver();
+	}
+}
+

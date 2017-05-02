@@ -1,0 +1,34 @@
+package TestRunner;
+
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+
+		@RunWith(Suite.class)
+		@SuiteClasses({				
+		/*	tests_FF_ANSYS.Add_Invalid_License_File.class,
+			tests_FF_ANSYS.Add_License_File_ANSYS_And_Ansoft.class,
+			tests_FF_ANSYS.Add_License_File.class,
+			tests_FF_ANSYS.Reread_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Restart_Add_Invalid_License_File.class,
+			tests_FF_ANSYS.Restrict_Access_to_Dashboard_Remote_Machine.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_1.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_2.class,
+			tests_FF_ANSYS.Specify_LM_Run_Mode_3.class,
+			tests_FF_ANSYS.Start_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Start_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_FF_ANSYS.Start_StoppedLM_With_InvalidLicenseFile.class,
+			tests_FF_ANSYS.Start_StoppedLM_With_MissingExecutables.class,
+			tests_FF_ANSYS.Stop_LicenseManager_Successfully.class,
+			tests_FF_ANSYS.Stop_LicenseManager_With_Ansyslmd_Ini.class,
+			tests_FF_ANSYS.Stop_StartedLM_With_MissingExecutables.class,
+			tests_FF_ANSYS.Verify_Exists.class,
+			tests_FF_ANSYS.View_Lic_Config_Details.class,
+			tests_FF_ANSYS.View_Log_License_Files.class,
+			tests_FF_ANSYS.Hostid_Info.class,*/
+		})
+
+		public class TestRunner_ANSYS_FF_Only {
+			}
